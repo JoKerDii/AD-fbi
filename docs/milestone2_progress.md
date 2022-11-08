@@ -1,10 +1,11 @@
+Progress Update:
+
 Zhen Di:
 
 Wenxu Liu:
 
-Qunnie Luo:
+Queenie Luo:
 
 Guangya Wan:
 
 Mengyao Zheng:
-

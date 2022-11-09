@@ -10,6 +10,7 @@ Di Zhen: I have finished creating the dual number class by adding a method to ch
 
 Mengyao Zheng: I have writen ‘How to use’ and  ‘Software Organization’ sections for the Milestone 2. And I also worked with Wenxu on writing the ‘Implementation details’ section.
 
+Wenxu Liu: I have updated  ‘How to use’ and  ‘Software Organization’ sections for Milestone 2. I have also been working with Mengyao on writing the ‘Future Features’ section. 
 
 * What tasks has each group member been assigned to for Milestone 2?
 
@@ -21,3 +22,4 @@ Di Zhen: For milestone2 I have been assigned to complete the adding setters and 
 
 Mengyao Zheng: For milestone 2, I plan to write the get_jacobian() method and multiple corresponding unit tests for the methods. I also plan to complete the documentations and comment lines for the forward_mode() class.
 
+Wenxu: For milestone 2, I will work on initializing a ForwardMode Object with a scalar function, evaluating the input function at evaluation point and using multiple pytest files to test the working code.

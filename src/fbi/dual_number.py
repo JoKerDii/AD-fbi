@@ -1,8 +1,8 @@
 # Authors: Wenxu Liu, Queenie Luo, Guangya Wan, Mengyao Zheng, Di Zhen          #
-# Course: AC 207                                                                #
+# Course: AC207/CS107                                                                #
 # File: dual_number.py                                                          #
-# Description: This class defines a variable object to be used in automatic     #
-# differentiation. It contains methods to initialize the object, set and get    #
+# Description: This class defines the dual number object to be used in forward mode 
+# automatic differentiation. It contains methods to initialize the object, set and get    #
 # the function and derivative value of the object, overload elementary          #
 # operations, and define elementary functions.                                  #
 #################################################################################
@@ -26,6 +26,12 @@ def is_numeric(x):
     >>> print(is_numeric(x))
     True
     >>> x = 'e'
+    >>> print(is_numeric(x))
+    False
+    >>> x = [1,2]
+    >>> print(is_numeric(x))
+    False
+    >>> x = [1,'cs107']
     >>> print(is_numeric(x))
     False
     """

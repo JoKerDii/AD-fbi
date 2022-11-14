@@ -38,6 +38,10 @@ class TestDualNumbers:
     def test_init(self):
         assert z0.val == 1
         assert z0.derv == 2
+
+        assert x1.val == 1
+        assert x1.derv[0] == 0
+        assert x1.derv[1] == 2
         
     # test attribute setter
     def test_setter(self):

@@ -18,7 +18,10 @@ x4 = DualNumbers(0, np.array([-2, -1]))
 
 class TestDualNumbers:
     """Test class for DualNumbers module"""
-    
+    def test_val_derv_repr(self):
+        assert "Values: 1, Derivatives: -1" == z1.__repr__()
+        assert "Values: 3, Derivatives: 100000" == z4.__repr__()
+        assert "Values: 1, Derivatives: [ 0 -1]" == x3.__repr__()
     # test is_numeric function
     def test_is_numeric(self):
         x1, x2, x3, x4 = 6, 'a', 'dual', ['n', 'u', 'm', 'b', 'e', 'r']
@@ -42,21 +45,34 @@ class TestDualNumbers:
         assert x1.val == 1
         assert x1.derv[0] == 0
         assert x1.derv[1] == 2
-    # def test_init_Error(self):
-    #     with self.assertRaises(ZeroDivisionError) as e:
-    #         var1 / 0
-    #     self.assertEqual('ERROR: Denominator in division should not be 0', str(e.exception))
-
-    #     with self.assertRaises(ZeroDivisionError) as e:
-    #         var1 / var6
-    #     self.assertEqual('ERROR: Denominator in division should not be 0', str(e.exception))
-        
+    def test_init_Error(self):
+        try:
+            z_err = DualNumbers('k', 2)
+            assert False
+        except TypeError:
+            assert True
+        try:
+            z_err = DualNumbers(2, [1,'k'])
+            assert False
+        except TypeError:
+            assert True
     # test attribute setter
     def test_setter(self):
         z0.val = 2
         z0.derv = 1
         assert z0.val == 2
         assert z0.derv == 1
+    def test_setter_Error(self):
+        try:
+            z0.val = 'o'
+            assert False
+        except TypeError:
+            assert True
+        try:
+            z0.derv = ['']
+            assert False
+        except TypeError:
+            assert True
     
     # test scalar addition operation
     def test_scalar_add(self):
@@ -183,6 +199,10 @@ class TestDualNumbers:
         out = 2 ** z4
         assert out.val == 2 ** 3
         assert out.derv == (2 ** 3) * (100000 * np.log(2))
+    def test_pow_error(self):
+        temp = DualNumbers(0,0)
+        with pytest.raises(ValueError) as e:
+            temp**DualNumbers(0.5,0)
         
     # test array power operation
     def test_1d_pow(self):
@@ -244,5 +264,144 @@ class TestDualNumbers:
         tmp = DualNumbers(1, np.array([1, 3]))
         assert (tmp != x1) == (False, True)
         tmp = DualNumbers(1, np.array([0, 2]))
-        assert (tmp != x1) == (False, False)
+        assert (tmp != x1) == (False, False) 
     
+    def test_sin_scalar(self):
+        sin_scalar = z3.sin()
+        assert pytest.approx(np.sin(2)) == sin_scalar.val
+        assert pytest.approx(np.cos(2) * 6.036) == sin_scalar.derv
+        sin_scalar_const = z2.sin()
+        assert pytest.approx(np.sin(2.2)) == sin_scalar_const.val
+        assert pytest.approx(0) == sin_scalar_const.derv
+
+    # test scalar cosine operation
+    def test_cos_scalar(self):
+        cos_scalar = z3.cos()
+        assert pytest.approx(np.cos(2)) == cos_scalar.val
+        assert pytest.approx((-np.sin(2) * 6.036)) == cos_scalar.derv
+        cos_scalar_const = z2.cos()
+        assert pytest.approx(np.cos(2.2)) == cos_scalar_const.val
+        assert pytest.approx(0) == cos_scalar_const.derv
+
+    # test scalar tangent operation
+    def test_tan_scalar(self):
+        tan_scalar = z3.tan()
+        assert pytest.approx(np.tan(2)) == tan_scalar.val
+        assert pytest.approx(6.036 / (np.cos(2) ** 2)) == tan_scalar.derv
+        tan_scalar_const = z2.tan()
+        assert pytest.approx(np.tan(2.2)) == tan_scalar_const.val
+        assert pytest.approx(0) == tan_scalar_const.derv
+
+    # test vector tangent operation
+
+    # test erorr handling in scalar tangent operation
+    def test_tan_scalar_error(self):
+        with pytest.raises(ValueError) as e:
+            var = DualNumbers(3 * np.pi / 2, -1)
+            var.tan()
+
+    # test scalar hyperbolic sine operation
+    def test_sinh_scalar(self):
+        sinh_scalar = z3.sinh()
+        assert pytest.approx(np.sinh(2)) == sinh_scalar.val
+        assert pytest.approx(np.cosh(2) * 6.036) == sinh_scalar.derv
+        sinh_scalar_const = z2.sinh()
+        assert pytest.approx(np.sinh(2.2)) == sinh_scalar_const.val
+        assert pytest.approx(0) == sinh_scalar_const.derv
+
+    # test scalar hyperbolic cosine operation
+    def test_cosh_scalar(self):
+        cosh_scalar = z3.cosh()
+        assert pytest.approx(np.cosh(2)) ==  cosh_scalar.val
+        assert pytest.approx(np.sinh(2) * 6.036) == cosh_scalar.derv
+        cosh_scalar_const = z2.cosh()
+        assert pytest.approx(np.cosh(2.2)) ==  cosh_scalar_const.val
+        assert pytest.approx(0) ==  cosh_scalar_const.derv
+
+    # test scalar hyperbolic tangent operation
+    def test_tanh_scalar(self):
+        tanh_scalar = z3.tanh()
+        assert pytest.approx(np.tanh(2)) == tanh_scalar.val
+        assert pytest.approx((1 - np.tanh(2) ** 2) * 6.036) == tanh_scalar.derv
+        tanh_scalar_const = z2.tanh()
+        assert pytest.approx(np.tanh(2.2)) ==  tanh_scalar_const.val
+        assert pytest.approx(0) == tanh_scalar_const.derv
+
+    # test scalar logarithmic operation
+    def test_log_scalar(self):
+        log_scalar = z3.log()
+        assert pytest.approx(np.log(2)) == log_scalar.val
+        assert pytest.approx(6.036 / 2) == log_scalar.derv
+        log_scalar_base10 = z3.log(10)
+        assert pytest.approx(np.log(2) / np.log(10)) == log_scalar_base10.val
+        assert pytest.approx((1 / (2 * np.log(10))) * 6.036) == log_scalar_base10.derv
+
+    # test error handling in scalar logarithmic operation
+    def test_log_scalar_invalid_value(self):
+        
+        with pytest.raises(ValueError) as e:
+            z3.log(1)
+        with pytest.raises(ValueError) as e:
+            z3.log(0)
+        with pytest.raises(ValueError) as e:
+            z3.log(-1)
+   
+    def test_exp_scalar(self):
+        exp_scalar_const = z2.exp()
+        assert pytest.approx(np.exp(2.2)) == exp_scalar_const.val
+        assert pytest.approx(0) == exp_scalar_const.derv
+
+    # test scalar inverse sine operation
+    def test_scalar_arcsin(self):
+        arc_sin_scalar = z5.arcsin()
+        assert pytest.approx(np.arcsin(0.5)) == arc_sin_scalar.val
+        assert pytest.approx(-2 / np.sqrt((1 - 0.5 ** 2))) == arc_sin_scalar.derv
+
+    # test scalar inverse cosine operation
+    def test_scalar_arccos(self):
+        arc_cos_scalar = z5.arccos()
+        assert pytest.approx(np.arccos(0.5)) == arc_cos_scalar.val
+        assert pytest.approx(2 / np.sqrt((1 - 0.5 ** 2))) == arc_cos_scalar.derv
+
+
+    # test scalar inverse tangent operation
+    def test_scalar_arctan(self):
+        arc_tan_scalar = z5.arctan()
+        assert pytest.approx(np.arctan(0.5)) == arc_tan_scalar.val
+        assert pytest.approx(-2 / (1 + 0.5 ** 2)) == arc_tan_scalar.derv
+
+    # test scalar power operation
+    def test_scalar_power(self):
+        # integer base float power
+        power_scalar_int_float = z4 **  z5
+        assert pytest.approx(3 ** 0.5) == power_scalar_int_float.val
+        assert pytest.approx((3 ** 0.5) * (-2 * np.log(3) + 100000 * 0.5 / 3)) == power_scalar_int_float.derv
+
+        # integer base integer power
+        power_scalar_int_int =  z4 ** z5
+        assert pytest.approx(3 ** 3) == power_scalar_int_int.val
+        assert pytest.approx((3 ** 3) * (100000 * np.log(3) + 100000 * 3 / 3)) == power_scalar_int_int.derv
+
+
+    # test error handling in scalar power operation
+    def test_scalar_power_error(self):
+        temp1 = DualNumbers(0, 1)
+        temp2 = DualNumbers(-3, -100000)
+        with pytest.raises(ValueError) as e:
+            temp1 **  z5
+
+        with pytest.raises(ValueError) as e:
+            temp2 ** z5
+
+        with pytest.raises(ValueError) as e:
+            temp2 ** 0.5
+
+        with pytest.raises(ValueError) as e:
+            temp1 ** 0.5
+
+    # test scalar logistic function
+    def test_logistic_scalar(self):
+        logi_scalar2 = z3.logistic()
+        assert pytest.approx((1 / (1 + np.exp(-2)))) == logi_scalar2.val
+        assert pytest.approx((6.036 * np.exp(-2) / ((np.exp(-2) + 1) ** 2))) == logi_scalar2.derv
+

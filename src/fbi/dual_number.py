@@ -72,7 +72,7 @@ class DualNumbers:
     Values: 3.2, Derivatives: -1
     """
     
-    def __init__(self, val, derv_seed):
+    def __init__(self, val, derv):
         r"""A constructor to create DualNumbers object with a value and a derivative
         
         Parameters
@@ -84,8 +84,22 @@ class DualNumbers:
         -------
         None
         """
-        self.val = val
-        self.derv = derv_seed
+        if is_numeric(val):
+            self._val = val
+        else:
+            raise TypeError('Error: Input value should be an int or float')
+        if is_numeric(derv):
+            self._derv = derv
+        # in the case of a 1D array of derivatives, check each element individually
+        elif isinstance(derv, np.ndarray) and len(derv.shape) == 1:
+            try:
+                derv = derv.astype(float)
+            except ValueError:
+                raise ValueError('Error: Input value should be an int or float')
+            self._derv = derv
+        # for all other non-numeric cases, raise the appropriate value error
+        else:
+            raise TypeError('Error: Input value must be an array of ints/floats or be a scalar int/float')
 
     @property
     def val(self):

@@ -42,6 +42,14 @@ class TestDualNumbers:
         assert x1.val == 1
         assert x1.derv[0] == 0
         assert x1.derv[1] == 2
+    # def test_init_Error(self):
+    #     with self.assertRaises(ZeroDivisionError) as e:
+    #         var1 / 0
+    #     self.assertEqual('ERROR: Denominator in division should not be 0', str(e.exception))
+
+    #     with self.assertRaises(ZeroDivisionError) as e:
+    #         var1 / var6
+    #     self.assertEqual('ERROR: Denominator in division should not be 0', str(e.exception))
         
     # test attribute setter
     def test_setter(self):

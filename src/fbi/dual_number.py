@@ -30,7 +30,7 @@ def is_numeric(x):
     False
     >>> x = [1,2]
     >>> print(is_numeric(x))
-    False
+    True
     >>> x = [1,'cs107']
     >>> print(is_numeric(x))
     False
@@ -677,3 +677,430 @@ class DualNumbers:
             is_derv_eq = True if self.derv != other.derv else False
 
         return is_val_eq, is_derv_eq
+    def sqrt(self):
+        """
+        method to compute the value and derivative of the square root function of the DualNumbers objects
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        A dualnumbers object that contains the value and derivative of the square root function
+
+        Examples
+        --------
+        # square root of variable with scalar derivative
+        >>> x = dual_number(4, -1)
+        >>> print(x.sqrt())
+        Values:2.0, Derivatives:-0.5
+
+        # square root of variable with vector derivative
+        >>> x = val_derv(1, np.array([-1, 0]))
+        >>> print(x.sqrt())
+        Values:1.0, Derivatives:[-0.5  0. ]
+
+        """
+        return self.__pow__(0.5)
+
+    def log(self, base=None):
+        """
+        method to compute the value and derivative of logarthmic of the DualNumbers objects
+
+        Parameters
+        ----------
+        base: A float object that represents the base of the logarithm (default logarithmic base is None)
+
+        Returns
+        -------
+        A val_derv object that contains the value and derivative of the logarithmic function
+
+        Raises
+        ------
+        ValueError
+            If self.val is less than or equal to zero
+            If input base is less than or equal to zero
+            If input base is equal to one
+
+        Examples
+        --------
+        # ValueError if self.val is less than or equal to zero
+        >>> x = DualNumbers(0, -1)
+        >>> print(x.log())
+        ValueError: ERROR: Value for log should be greater than 0
+
+        # ValueError if input base is less than or equal to zero or equal to 1
+        >>> x = DualNumbers(1, 1)
+        >>> print(x.log(base = -1))
+        ValueError: ERROR: LOG base should be greater than 0 and not equal to 1
+
+        # logarithm of variable with scalar derivative
+        >>> x = DualNumbers(1, -1)
+        >>> print(x.log())
+        Values:0.0, Derivatives:-1.0
+
+        # logarithm of variable with vector derivative
+        >>> x = DualNumbers(1, np.array([-1, 0]))
+        >>> print(x.log())
+        Values:0.0, Derivatives:[-1.  0.]
+        """
+
+        # ensure the value is greater than zero so that log is correctly defined
+        if self.val <= 0:
+            raise ValueError("ERROR: Value for log should be greater than 0")
+        # if the default base is used, proceed with default base numpy log funtion
+        if base is None:
+            return DualNumbers(np.log(self.val), self.derv * 1 / self.val)
+        # ensure the user specifies a valid base before computing the log value and derivative
+        else:
+            if base <= 0 or base == 1:
+                raise ValueError("ERROR: LOG base should be greater than 0 and not equal to 1")
+            return DualNumbers(np.log(self.val) / np.log(base), self.derv * 1 / self.val * np.log(base))
+
+    def exp(self):
+        """
+        method to compute the value and derivative of exponential function
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        A val_derv object that contains the value and derivative of the exponential function
+
+        Examples
+        --------
+        # exponential of variable with scalar derivative
+        >>> x = val_derv(0, -2)
+        >>> print(x.exp())
+        Values:1.0, Derivatives:-2.0
+
+        # exponential of variable with vector derivative
+        >>> x = val_derv(0, np.array([-1, 0]))
+        >>> print(x.exp())
+        Values:1.0, Derivatives:[-1.  0.]
+        """
+        # compute the value and derivative of the exponential function for any input
+        return DualNumbers(np.exp(self.val), self.derv * np.exp(self.val))
+
+    def sin(self):
+        """
+        method to compute the value and derivative of the sine function
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        A val_derv object that contains the value and derivative of the sine function
+
+        Examples
+        --------
+        # sine of variable with scalar derivative
+        >>> x = val_derv(0, -1)
+        >>> print(x.sin())
+        Values:0.0, Derivatives:-1.0
+
+        # sine of variable with vector derivative
+        >>> x = val_derv(0, np.array([-1, 0]))
+        >>> print(x.sin())
+        Values:0.0, Derivatives:[-1.  0.]
+        """
+        # compute the value and derivative of the sine function for any input
+        return DualNumbers(np.sin(self.val), self.derv * np.cos(self.val))
+
+    def cos(self):
+        """
+        method to compute the value and derivative of the cosine function
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        A val_derv object that contains the value and derivative of the cosine function
+
+        Examples
+        --------
+        # cosine of variable with scalar derivative
+        >>> x = val_derv(0, -1)
+        >>> print(x.cos())
+        Values:1.0, Derivatives:0.0
+
+        # cosine of variable with vector derivative
+        >>> x = val_derv(0, np.array([-1, 0]))
+        >>> print(x.cos())
+        Values:1.0, Derivatives:[ 0. -0.]
+
+        """
+        # compute the value and derivative of the cosine function for any input
+        return DualNumbers(np.cos(self.val), self.derv * np.sin(self.val))
+
+    def tan(self):
+        """
+        method to compute the value and derivative of the tangent function
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        A val_derv object that contains the value and derivative of the tangent function
+
+        Raises
+        ------
+        ValueError if input is an odd multiple of pi/2
+
+        Examples
+        --------
+        # tangent of variable with scalar derivative
+        >>> x = val_derv(0, -1)
+        >>> print(x.tan())
+        Values:0.0, Derivatives:-1.0
+
+        # tangent of variable with vector derivative
+        >>> x = val_derv(0, np.array([-1, 0]))
+        >>> print(x.tan())
+        Values:0.0, Derivatives:[-1.  0.]
+
+        # ValueError if input is an odd multiple of pi/2
+        >>> x = val_derv(np.pi / 2, -1)
+        >>> print(x.tan())
+        ValueError: ERROR: Input to tan should not be an odd mutiple of pi/2
+
+        """
+
+        # ensure the user does not input an odd multiple of pi divided by 2
+        if (self.val / (np.pi / 2)) % 2 == 1:
+            raise ValueError("ERROR: Input to tan should not be an odd mutiple of pi/2")
+
+        # compute the value and derivative of the tangent function for a valid input
+        return DualNumbers(np.tan(self.val), self.derv * 1 / np.cos(self.val) ** 2)
+
+    def sinh(self):
+        """
+        method to compute the value and derivative of the hyperbolic sine function
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        A val_derv object that contains the value and derivative of the hyperbolic sine function
+
+        Examples
+        --------
+        # hyperbolic sine of variable with scalar derivative
+        >>> x = val_derv(0, -1)
+        >>> print(x.sinh())
+        Values:0.0, Derivatives:-1.0
+
+        # hyperbolic sine of variable with vector derivative
+        >>> x = val_derv(0, np.array([-1, 0]))
+        >>> print(x.sinh())
+        Values:0.0, Derivatives:[-1.  0.]
+
+        """
+        return DualNumbers(np.sinh(self.val), self.derv * np.cosh(self.val))
+
+    def cosh(self):
+        """
+        method to compute the value and derivative of the hyperbolic cosine function
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        A val_derv object that contains the value and derivative of the hyperbolic cosine function
+
+        Examples
+        --------
+        # hyperbolic cosine of variable with scalar derivative
+        >>> x = val_derv(0, -1)
+        >>> print(x.cosh())
+        Values:1.0, Derivatives:-0.0
+
+        # hyperbolic cosine of variable with vector derivative
+        >>> x = val_derv(0, np.array([-1, 0]))
+        >>> print(x.cosh())
+        Values:1.0, Derivatives:[-0.  0.]
+
+        """
+
+        # compute the value and derivative of the hyperbolic cosine function for any input
+        return DualNumbers(np.cosh(self.val), self.derv * np.sinh(self.val))
+
+    def tanh(self):
+        """
+        method to compute the value and derivative of the hyperbolic tangent function
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        A val_derv object that contains the value and derivative of the hyperbolic tangent function
+
+        Examples
+        --------
+        # hyperbolic tangent of variable with scalar derivative
+        >>> x = val_derv(0, -1)
+        >>> print(x.tanh())
+        Values:0.0, Derivatives:-1.0
+
+        # hyperbolic tangent of variable with vector derivative
+        >>> x = val_derv(0, np.array([-1, 0]))
+        >>> print(x.tanh())
+        Values:0.0, Derivatives:[-1.  0.]
+
+        """
+
+        # compute the value and derivative of the hyperbolic tangent function for any input
+        return DualNumbers(np.tanh(self.val), self.derv * 1 / (np.cosh(self.val) ** 2))
+
+    def arcsin(self):
+        """
+        method to compute the value and derivative of the inverse sine function
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        A val_derv object that contains the value and derivative of the inverse sine function
+
+        Raises
+        ------
+        ValueError if input is not contained within the interval [-1,1]
+
+        Examples
+        --------
+        # inverse sine of variable with scalar derivative
+        >>> x = val_derv(0, -1)
+        >>> print(x.arcsin())
+        Values:0.0, Derivatives:-1.0
+
+        # inverse sine of variable with vector derivative
+        >>> x = val_derv(0, np.array([-1, 0]))
+        >>> print(x.arcsin())
+        Values:0.0, Derivatives:[-1.  0.]
+
+        # ValueError for input outside of the interval -1 to 1
+        >>> x = val_derv(2, -1)
+        >>> print(x.arcsin())
+        ValueError: ERROR: Input to arcsin() should be between -1 and 1
+
+        """
+
+        # ensure the user passes in an input between -1 and 1
+        if -1 >= self.val or self.val >= 1:
+            raise ValueError("ERROR: Input to arcsin() should be between -1 and 1")
+        # compute the value and derivative of the inverse sine function for a valid input
+        return DualNumbers(np.arcsin(self.val), self.derv * 1 / (1 - self.val ** 2) ** 0.5)
+
+    def arccos(self):
+        """
+        method to compute the value and derivative of the inverse cosine function
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        A val_derv object that contains the value and derivative of the inverse cosine function
+
+        Raises
+        ------
+        ValueError will be raised if input is not contained within the interval [-1,1]
+
+        Examples
+        --------
+        # inverse cosine of variable with scalar derivative
+        >>> x = val_derv(0, -1)
+        >>> print(x.arccos())
+        Values:1.5707963267948966, Derivatives:1.0
+
+        # inverse cosine of variable with vector derivative
+        >>> x = val_derv(0, np.array([-1, 0]))
+        >>> print(x.arccos())
+        Values:1.5707963267948966, Derivatives:[ 1. -0.]
+
+        # ValueError for input outside of the interval -1 to 1
+        >>> x = val_derv(2, -1)
+        >>> print(x.arccos())
+        ValueError: ERROR: Input to arccos() should be between -1 and 1
+
+        """
+
+        # ensure the user passes in an input between -1 and 1
+        if -1 >= self.val or self.val >= 1:
+            raise ValueError("ERROR: Input to arccos() should be between -1 and 1")
+        # compute the value and derivative of the inverse cosine function for a valid input
+        return DualNumbers(np.arccos(self.val),  - 1 / (1 - self.val ** 2) ** 0.5)
+
+    def arctan(self):
+        """
+        method to compute the value and derivative of the inverse tangent function
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        A val_derv object that contains the value and derivative of the inverse tangent function
+
+        Examples
+        --------
+        # inverse tangent of variable with scalar derivative
+        >>> x = val_derv(1, -1)
+        >>> print(x.arctan())
+        Values:0.7853981633974483, Derivatives:-0.5
+
+        # inverse tangent of variable with vector derivative
+        >>> x = val_derv(1, np.array([-1, 0]))
+        >>> print(x.arctan())
+        Values:0.7853981633974483, Derivatives:[-0.5  0. ]
+
+        """
+        # compute the value and derivative of the inverse tangent function for a valid input
+        return DualNumbers(np.arctan(self.val), 1 / (1 + self.val ** 2))
+
+    def logistic(self):
+        """
+        method to compute the value and derivative of the logistic function
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        A val_derv object that contains the value and derivative of the logistic function
+
+        Examples
+        --------
+        # logistic of variable with scalar derivative
+        >>> x = val_derv(1, -1)
+        >>> print(x.logistic())
+        Values:0.7310585786300049, Derivatives:-0.19661193324148188
+
+        # logistic of variable with vector derivative
+        >>> x = val_derv(1, np.array([-1, 0]))
+        >>> print(x.logistic())
+        Values:0.7310585786300049, Derivatives:[-0.19661193 -0.        ]
+
+        """
+
+        return 1 / ((-self).exp() + 1)

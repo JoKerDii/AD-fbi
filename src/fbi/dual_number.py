@@ -765,12 +765,12 @@ class DualNumbers:
             raise ValueError("ERROR: Value for log should be greater than 0")
         # if the default base is used, proceed with default base numpy log funtion
         if base is None:
-            return DualNumbers(np.log(self.val), self.derv * 1 / self.val)
+            return DualNumbers(np.log(self.val), self.derv / self.val)
         # ensure the user specifies a valid base before computing the log value and derivative
         else:
             if base <= 0 or base == 1:
                 raise ValueError("ERROR: LOG base should be greater than 0 and not equal to 1")
-            return DualNumbers(np.log(self.val) / np.log(base), self.derv * 1 / self.val * np.log(base))
+            return DualNumbers(np.log(self.val) / np.log(base), self.derv / (self.val * np.log(base)))
 
     def exp(self):
         """
@@ -852,7 +852,7 @@ class DualNumbers:
 
         """
         # compute the value and derivative of the cosine function for any input
-        return DualNumbers(np.cos(self.val), self.derv * np.sin(self.val))
+        return DualNumbers(np.cos(self.val), -self.derv * np.sin(self.val))
 
     def tan(self):
         """
@@ -1061,7 +1061,7 @@ class DualNumbers:
         if -1 >= self.val or self.val >= 1:
             raise ValueError("ERROR: Input to arccos() should be between -1 and 1")
         # compute the value and derivative of the inverse cosine function for a valid input
-        return DualNumbers(np.arccos(self.val),  - 1 / (1 - self.val ** 2) ** 0.5)
+        return DualNumbers(np.arccos(self.val),  - self.derv / (1 - self.val ** 2) ** 0.5)
 
     def arctan(self):
         """
@@ -1089,7 +1089,7 @@ class DualNumbers:
 
         """
         # compute the value and derivative of the inverse tangent function for a valid input
-        return DualNumbers(np.arctan(self.val), 1 / (1 + self.val ** 2))
+        return DualNumbers(np.arctan(self.val), self.derv / (1 + self.val ** 2))
 
     def logistic(self):
         """

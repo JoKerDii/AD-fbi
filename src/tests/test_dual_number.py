@@ -378,7 +378,7 @@ class TestDualNumbers:
         assert pytest.approx((3 ** 0.5) * (-2 * np.log(3) + 100000 * 0.5 / 3)) == power_scalar_int_float.derv
 
         # integer base integer power
-        power_scalar_int_int =  z4 ** z5
+        power_scalar_int_int =  z4 ** z4
         assert pytest.approx(3 ** 3) == power_scalar_int_int.val
         assert pytest.approx((3 ** 3) * (100000 * np.log(3) + 100000 * 3 / 3)) == power_scalar_int_int.derv
 

@@ -35,12 +35,12 @@ class ForwardMode:
         --------
         # get univariate scalar function value
         >>> func = lambda x: x
-        >>> fm = forward_mode(1, func, -1)
+        >>> fm = ForwardMode(1, func, -1)
         >>> fm.get_fx_value()
         1
         # get multivariate scalar function value
         >>> func = lambda x, y: x + y
-        >>> fm = forward_mode(np.array([1, 1]), func, [1, -1])
+        >>> fm = ForwardMode(np.array([1, 1]), func, [1, -1])
         >>> fm.get_fx_value()
         2
         """

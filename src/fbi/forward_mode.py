@@ -83,7 +83,4 @@ class ForwardMode:
         
         z = self.functions(*num_del)
         return z.val, z.derv
-
-
-
     

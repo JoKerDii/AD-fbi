@@ -36,9 +36,6 @@ class ForwardMode:
     # get function value and derivative
     >>> fm.get_function_value_and_jacobian()
     (2, array([-2.]))
-
-    
-    
     
     """
 
@@ -101,6 +98,32 @@ class ForwardMode:
         return self.calculate_dual_number()[1]
     
     def calculate_dual_number(self):
+        """
+        Parameters
+        ----------
+        None
+        
+        Returns
+        -------
+        evaluated value and derivative of the input function at the evaluation point
+        
+        Examples
+        --------
+        # get univariate scalar function value and jacobian
+        >>> func = lambda x: x + 1
+        >>> fm = forward_mode(1, func, -1)
+        >>> fm.calculate_dual_number()
+        (2, array([-1.]))
+        # get univariate vector function value and jacobian
+        >>> func = lambda x: (x, 2*x, x**2)
+        >>> fm = forward_mode(1, func, -1)
+        >>> fm.get_function_value_and_jacobian()
+        (array([1., 2., 1.]), array([[-1.],
+                                     [-2.],
+                                     [-2.]]))
+        
+        """
+        
         
         # check if the input is a scalar
         if len(self.inputs) != 1:

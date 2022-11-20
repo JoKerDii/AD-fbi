@@ -39,7 +39,7 @@ class ForwardMode:
     
     """
 
-    def __init__(self, input_values, input_function, seed=1):
+    def __init__(self, input_values, input_function, seed = 1):
         self.inputs = input_values
         self.functions = input_function
         self.seed = seed
@@ -61,11 +61,6 @@ class ForwardMode:
         >>> fm = ForwardMode(1, func, -1)
         >>> fm.get_fx_value()
         1
-        # get multivariate scalar function value
-        >>> func = lambda x, y: x + y
-        >>> fm = ForwardMode(np.array([1, 1]), func, [1, -1])
-        >>> fm.get_fx_value()
-        2
         """
 
         return self.calculate_dual_number()[0]
@@ -87,12 +82,8 @@ class ForwardMode:
         >>> func = lambda x: x
         >>> fm = forward_mode(1, func, -1)
         >>> fm.get_derivative()
-        array([-1.])
-        # get multivariate scalar function jacobian
-        >>> func = lambda x, y: x + y
-        >>> fm = forward_mode(np.array([1, 1]), func, [1, -1])
-        >>> fm.get_derivative()
-        array([ 1., -1.])
+        -1
+
         """
 
         return self.calculate_dual_number()[1]
@@ -113,14 +104,7 @@ class ForwardMode:
         >>> func = lambda x: x + 1
         >>> fm = forward_mode(1, func, -1)
         >>> fm.calculate_dual_number()
-        (2, array([-1.]))
-        # get univariate vector function value and jacobian
-        >>> func = lambda x: (x, 2*x, x**2)
-        >>> fm = ForwardMode(1, func, -1)
-        >>> fm.get_function_value_and_jacobian()
-        (array([1., 2., 1.]), array([[-1.],
-                                     [-2.],
-                                     [-2.]]))
+        (2, -1)
         
         """
         
@@ -140,8 +124,20 @@ class ForwardMode:
         num_del[0] = DualNumbers(inputs_arr[0], self.seed)
         
         z = self.functions(*num_del)
-        return z.val, z.derv
+        
+        try:
+            return z.val, z.derv
+        except TypeError:
+            print("ERROR: The input function must output a scalar.")
     
+
+
+## will delete the following afterwards
+func = lambda x: x + 1
+fm = ForwardMode(1, func, -1)
+print(fm.calculate_dual_number())
+print(fm.get_fx_value())
+print(fm.get_derivative())
 
         
 func = lambda x: x + 1
@@ -150,6 +146,10 @@ print(fm.calculate_dual_number() == (2, -1))
 print(fm.get_fx_value() == 2)
 print(fm.get_derivative() == -1)
 
-fm2 = ForwardMode([1, 2], func, -1)
-fm2.calculate_dual_number()
+fm2 = ForwardMode((1, 2), func, -1)
+print(fm2.calculate_dual_number())
+
+func2 = lambda x: (x, 2*x, x**2)
+fm3 = ForwardMode(1, func2, -1)
+fm3.calculate_dual_number()
     

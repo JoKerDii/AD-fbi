@@ -8,7 +8,7 @@
 
 
 import numpy as np
-from fbi.dual_number import DualNumbers, is_numeric
+from dual_number import DualNumbers
 
 
 class ForwardMode:
@@ -116,7 +116,7 @@ class ForwardMode:
         (2, array([-1.]))
         # get univariate vector function value and jacobian
         >>> func = lambda x: (x, 2*x, x**2)
-        >>> fm = forward_mode(1, func, -1)
+        >>> fm = ForwardMode(1, func, -1)
         >>> fm.get_function_value_and_jacobian()
         (array([1., 2., 1.]), array([[-1.],
                                      [-2.],
@@ -125,19 +125,31 @@ class ForwardMode:
         """
         
         
-        # check if the input is a scalar
-        if len(self.inputs) != 1:
-            raise TypeError("ERROR: Input value is not a scaler")
-        else:
+        
+        
         # handle the case of having only a single input value: convert the scalar value into a list
-            self.inputs = np.array([self.inputs])
+        inputs_arr = np.array([self.inputs])
+            
+        # check if the input is a scalar
+        if len(inputs_arr) != 1:
+            print("self.inputs", inputs_arr)
+            raise TypeError("ERROR: Input value is not a scaler")
 
-        num_inp = len(self.inputs)
-
-        num_del = [0] * num_inp
-        for i in range(num_inp):
-            num_del[i] = DualNumbers(self.inputs[i], self.seed)
+        
+        num_del = [0]
+        num_del[0] = DualNumbers(inputs_arr[0], self.seed)
         
         z = self.functions(*num_del)
         return z.val, z.derv
+    
+
+        
+func = lambda x: x + 1
+fm = ForwardMode(1, func, -1)
+print(fm.calculate_dual_number() == (2, -1))
+print(fm.get_fx_value() == 2)
+print(fm.get_derivative() == -1)
+
+fm2 = ForwardMode([1, 2], func, -1)
+fm2.calculate_dual_number()
     

@@ -16,6 +16,30 @@ class ForwardMode:
     A class to perform forward mode automatic differentiation mode, enabling a user
     to output just the function values evaluated at the evaluation point, just the derivative values, 
     or both the function and derviative values in a tuple.
+    
+    Instance Variables
+    ----------
+    input_values: a scalar or a vector which indicates the evaluation point
+    input_function: a scalar function or a vector of functions 
+    seed: a seed vector (optional parameter: default value = 1)
+    
+    Examples
+    --------
+    # get function value
+    >>> func = lambda x: x**2 + 1
+    >>> fm = ForwardMode(1, func, -1)
+    >>> fm.get_fx_value()
+    2
+    # get function derivative
+    >>> fm.get_derivative()
+    array([-2.])
+    # get function value and derivative
+    >>> fm.get_function_value_and_jacobian()
+    (2, array([-2.]))
+
+    
+    
+    
     """
 
     def __init__(self, input_values, input_function, seed=1):
@@ -24,13 +48,15 @@ class ForwardMode:
         self.seed = seed
 
     def get_fx_value(self):
-       """
+        """
         Parameters
         ----------
         None
+        
         Returns
         -------
         evaluated value of the input function
+        
         Examples
         --------
         # get univariate scalar function value
@@ -46,18 +72,21 @@ class ForwardMode:
         """
 
         return self.calculate_dual_number()[0]
+    
 
     def get_derivative(self):
         """
         Parameters
         ----------
         None
+        
         Returns
         -------
-        jacobian of the input function
+        the derivative of the input function at the evaluation point
+        
         Examples
         --------
-        # get univariate scalar function jacobian
+        # get univariate scalar function derivative
         >>> func = lambda x: x
         >>> fm = forward_mode(1, func, -1)
         >>> fm.get_derivative()

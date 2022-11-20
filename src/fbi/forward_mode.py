@@ -19,7 +19,7 @@ class ForwardMode:
     
     Instance Variables
     ----------
-    input_values: a scalar or a vector which indicates the evaluation point
+    input_values: a scalar or a vector which indicates the evaluation point, in this Milestone, only a scalar is allowed
     input_function: a scalar function or a vector of functions 
     seed: a seed vector (optional parameter: default value = 1)
     
@@ -101,10 +101,15 @@ class ForwardMode:
         return self.calculate_dual_number()[1]
     
     def calculate_dual_number(self):
-        self.inputs = np.array([self.inputs])
+        
+        # check if the input is a scalar
+        if len(self.inputs) != 1:
+            raise TypeError("ERROR: Input value is not a scaler")
+        else:
+        # handle the case of having only a single input value: convert the scalar value into a list
+            self.inputs = np.array([self.inputs])
 
         num_inp = len(self.inputs)
-        seed_vec = np.zeros(num_inp)
 
         num_del = [0] * num_inp
         for i in range(num_inp):

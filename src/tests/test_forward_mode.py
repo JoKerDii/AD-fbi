@@ -58,20 +58,20 @@ class TestForwardMode:
         
         
     
-func = lambda x: x + 1
-fm = ForwardMode(1, func, -1)
-print(fm.calculate_dual_number())
-print(fm.get_fx_value())
-print(fm.get_derivative())
+# func = lambda x: x + 1
+# fm = ForwardMode(1, func, -1)
+# print(fm.calculate_dual_number())
+# print(fm.get_fx_value())
+# print(fm.get_derivative())
 
         
-func = lambda x: x + 1
-fm = ForwardMode(1, func, -1)
-print(fm.calculate_dual_number() == (2, -1))
-print(fm.get_fx_value() == 2)
-print(fm.get_derivative() == -1)
+# func = lambda x: x + 1
+# fm = ForwardMode(1, func, -1)
+# print(fm.calculate_dual_number() == (2, -1))
+# print(fm.get_fx_value() == 2)
+# print(fm.get_derivative() == -1)
 
 
-func2 = lambda x: (x, 2*x, x**2)
-fm3 = ForwardMode(1, func2, -1)
-fm3.calculate_dual_number()
+# func2 = lambda x: (x, 2*x, x**2)
+# fm3 = ForwardMode(1, func2, -1)
+# fm3.calculate_dual_number()

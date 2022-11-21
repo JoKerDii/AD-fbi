@@ -1,18 +1,61 @@
 import pytest
 import numpy as np
-from fbi.dual_number import DualNumbers, is_numeric
+
 from fbi.forward_mode import ForwardMode
 
 
-def test_univariate_scalar_f(self):
-    func = lambda x: 2 * x + x ** 2 + x.log() + 1 / x
-    func_val = lambda x: 2 * x + x ** 2 + np.log(x) + 1 / x
-    func_derv = lambda x: 2 + 2 * x + 1 / x - 1 / (x ** 2)
+##initialize ForwardMode objects
 
-    ad = ForwardMode(2, func)
+func1 = lambda x: x
+fm1 = ForwardMode(1, func1)
+fm2 = ForwardMode(1, func1, -1)
 
-    f_val = ad.get_fx_value()
-    f_derv = ad.get_derivative()
+func2 = lambda x: x**2 + 2
+fm3 = ForwardMode(2, func2)
+fm4 = ForwardMode(3, func2, -2)
 
-    self.assertAlmostEqual(f_val, func_val(2))
-    self.assertAlmostEqual(f_derv, func_derv(2))
+
+
+class TestForwardMode:
+    """Test class for ForwardMode module"""
+    
+    # test attribute initialization
+    def test_init(self):
+        assert fm1.inputs == 1
+        assert fm1.functions == func1
+        assert fm1.seed == 1
+        
+        assert fm2.inputs == 1
+        assert fm2.functions == func1
+        assert fm2.seed == -1
+        
+        assert fm3.inputs == 2
+        assert fm3.functions == func2
+        assert fm3.seed == 1
+        
+        assert fm4.inputs == 3
+        assert fm4.functions == func2
+        assert fm4.seed == -2
+        
+        
+    def test_get_fx_value(self):
+        assert fm1.get_fx_value() == 1
+        assert fm2.get_fx_value() == 1
+        assert fm3.get_fx_value() == 6
+        assert fm4.get_fx_value() == 11
+        
+    def test_get_derivative(self):
+        assert fm1.get_derivative() == 1 
+        assert fm2.get_derivative() == -1 
+        assert fm3.get_derivative() == 4
+        assert fm4.get_derivative() == -12
+        
+    def test_calculate_dual_number(self):
+        assert fm1.calculate_dual_number() == (1, 1)
+        assert fm2.calculate_dual_number() == (1, -1)
+        assert fm3.calculate_dual_number() == (6, 4)
+        assert fm4.calculate_dual_number() == (11, -12)
+        
+        
+    
+    

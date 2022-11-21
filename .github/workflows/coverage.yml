@@ -28,9 +28,9 @@ jobs:
           if [ "$k" -ge "$threshold" ];
             then
             echo "Succeessfully above 90 coverage"
-            exit 1
+            exit 0
           else
             echo "Coverage threshold not met"
-            exit 0
+            exit 1
           fi
         

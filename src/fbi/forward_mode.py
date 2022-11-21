@@ -34,7 +34,7 @@ class ForwardMode:
     >>> fm.get_derivative()
     array([-2.])
     # get function value and derivative
-    >>> fm.get_function_value_and_jacobian()
+    >>> fm.calculate_dual_number()
     (2, array([-2.]))
     
     """
@@ -112,11 +112,14 @@ class ForwardMode:
         
         
         # handle the case of having only a single input value: convert the scalar value into a list
-        inputs_arr = np.array([self.inputs])
+        
             
         # check if the input is a scalar
-        if len(inputs_arr) != 1:
-            print("self.inputs", inputs_arr)
+        if type(self.inputs)==float or type(self.inputs)==int:
+            inputs_arr = np.array([self.inputs])
+        elif len(self.inputs) == 1:
+            inputs_arr = np.array([self.inputs])
+        else:
             raise TypeError("ERROR: Input value is not a scaler")
 
         
@@ -127,29 +130,7 @@ class ForwardMode:
         
         try:
             return z.val, z.derv
-        except TypeError:
+        except AttributeError:
             print("ERROR: The input function must output a scalar.")
     
-
-
-## will delete the following afterwards
-func = lambda x: x + 1
-fm = ForwardMode(1, func, -1)
-print(fm.calculate_dual_number())
-print(fm.get_fx_value())
-print(fm.get_derivative())
-
-        
-func = lambda x: x + 1
-fm = ForwardMode(1, func, -1)
-print(fm.calculate_dual_number() == (2, -1))
-print(fm.get_fx_value() == 2)
-print(fm.get_derivative() == -1)
-
-fm2 = ForwardMode((1, 2), func, -1)
-print(fm2.calculate_dual_number())
-
-func2 = lambda x: (x, 2*x, x**2)
-fm3 = ForwardMode(1, func2, -1)
-fm3.calculate_dual_number()
     

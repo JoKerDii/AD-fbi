@@ -39,10 +39,23 @@ class ForwardMode:
     
     """
 
-    def __init__(self, input_values, input_function, seed = 1):
+    def __init__(self, input_values, input_function, seed = "default seed"):
         self.inputs = input_values
         self.functions = input_function
-        self.seed = seed
+        
+        # if there is no input value for seed
+        if seed == 'default seed':
+            # if the input variable is a scalar
+            if np.isscalar(self.inputs):
+                self.seed = 1
+            
+            # if the input variable is an array
+            else:
+                self.seed = np.ones(len(self.inputs))
+                
+        # if seed is specified by the user
+        else:
+            self.seed = seed
 
     def get_fx_value(self):
         """
@@ -88,6 +101,23 @@ class ForwardMode:
 
         return self.calculate_dual_number()[1]
     
+    @staticmethod
+    def fuse_multiple_inputs(functions, n_col):
+        
+        func_num = len(functions)
+        
+        # initialize the arrays to store the function and directional derivatives for the input functions
+        func_val = np.empty(func_num)  
+        func_der = np.empty([func_num, n_col])    
+        
+        # compute the function and directional derivative value for each input functions
+        for i, funct in enumerate(functions):
+            func_val[i] = funct.val
+            func_der[i] = funct.derv
+        
+        return func_val, func_der
+        
+    
     def calculate_dual_number(self):
         """
         Parameters
@@ -100,11 +130,35 @@ class ForwardMode:
         
         Examples
         --------
-        # get univariate scalar function value and jacobian
+        # get univariate scalar function value and the directional derivative
+        # the function takes a scalar input and outputs a scalar
         >>> func = lambda x: x + 1
-        >>> fm = forward_mode(1, func, -1)
+        >>> fm = ForwardMode(1, func, -1)
         >>> fm.calculate_dual_number()
-        (2, -1)
+        (2, array([-1.]))
+        
+        # get univariate vector function value and directional derivative
+        # the function takes a scalar input and outputs an array
+        >>> func = lambda x: (x + 1, x**3)
+        >>> fm = ForwardMode(1, func, -1)
+        >>> fm.calculate_dual_number()
+        (array([2., 1.]), array([[-1.],
+                                 [-3.]]))
+        
+        # get multivariate scalar function value and directional derivative
+        # the function takes an array input and outputs a scalar
+        >>> func = lambda x, y: 2*x + y
+        >>> fm = ForwardMode(np.array([1, 1]), func, [2, -1])
+        >>> fm.calculate_dual_number()
+        (3, array([ 4., -1.]))
+        
+        # get multivariate array function value and directional derivative
+        # the function takes an array input and outputs an array
+        >>> func = lambda x, y: (2*x + y, 3*y + x**2)
+        >>> fm = ForwardMode(np.array([1, 1]), func, [2, -1])
+        >>> fm.calculate_dual_number()
+        (array([3., 4.]), array([[ 4., -1.],
+                                 [ 4., -3.]]))
         
         """
         
@@ -115,22 +169,75 @@ class ForwardMode:
         
             
         # check if the input is a scalar
-        if type(self.inputs)==float or type(self.inputs)==int:
-            inputs_arr = np.array([self.inputs])
+        if np.isscalar(self.inputs):
+            # enforce the self.inputs to become an array
+            self.inputs = np.array([self.inputs]) 
+            input_num = 1
         elif len(self.inputs) == 1:
-            inputs_arr = np.array([self.inputs])
+            input_num = 1
         else:
-            raise TypeError("ERROR: Input value is not a scaler")
+            input_num = len(self.inputs)
+            
 
+        # initialize the list of dual numbers
+        dual_list = [0] * input_num
         
-        num_del = [0]
-        num_del[0] = DualNumbers(inputs_arr[0], self.seed)
+        # get the corresponding seed vector       
+        def get_seed_vector(index):
+            
+            seed_vector = np.zeros(input_num)
+            
+            # if self.seed is a scalar
+            if np.isscalar(self.seed):
+                seed_vector[index] = self.seed
+            else:
+                # if self.seed is an array
+                if input_num != len(self.seed):
+                    raise ValueError("ERROR: Seed vector length mismatchs with the number of input variables.")
+                elif len(self.seed) == 1:
+                    seed_vector[index] = self.seed[0]
+                else:
+                    seed_vector[index] = self.seed[index]
+
+            return seed_vector
         
-        z = self.functions(*num_del)
+        for i in range(input_num):
+            dual_list[i] = DualNumbers(self.inputs[i], get_seed_vector(i))
+        
+        z = self.functions(*dual_list)
         
         try:
             return z.val, z.derv
         except AttributeError:
-            print("ERROR: The input function must output a scalar.")
-    
+            return self.fuse_multiple_inputs(z, input_num)
+            
+
+
+
+            
+func = lambda x: x + 1
+fm = ForwardMode(1, func, -1)
+print(fm.calculate_dual_number())
+
+
+
+
+func = lambda x: (x + 1, x**3)
+fm = ForwardMode(1, func, -1)
+print(fm.calculate_dual_number())
+
+
+
+func = lambda x, y: 2*x + y
+fm = ForwardMode(np.array([1, 1]), func, [2, -1])
+print(fm.calculate_dual_number())
+
+
+func = lambda x, y: (2*x + y, 3*y + x**2)
+fm = ForwardMode(np.array([1, 1]), func, [2, -1])
+print(fm.calculate_dual_number())
+        
+
+
+
     

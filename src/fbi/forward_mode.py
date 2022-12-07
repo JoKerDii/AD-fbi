@@ -19,9 +19,9 @@ class ForwardMode:
     
     Instance Variables
     ----------
-    input_values: a scalar or a vector which indicates the evaluation point, in this Milestone, only a scalar is allowed
+    input_values: a scalar or a vector which indicates the evaluation point
     input_function: a scalar function or a vector of functions 
-    seed: a seed vector (optional parameter: default value = 1)
+    seed: a seed vector (optional parameter: default value = 1 or np.ones(len(self.inputs))
     
     Examples
     --------
@@ -30,12 +30,24 @@ class ForwardMode:
     >>> fm = ForwardMode(1, func, -1)
     >>> fm.get_fx_value()
     2
+    
     # get function derivative
     >>> fm.get_derivative()
     array([-2.])
+    
     # get function value and derivative
     >>> fm.calculate_dual_number()
     (2, array([-2.]))
+    
+    # get univariate vector function value and directional derivative
+    # the function takes a scalar input and outputs an array
+    >>> func = lambda x: (x + 1, x**3)
+    >>> fm = ForwardMode(1, func, -1)
+    >>> fm.calculate_dual_number()
+    (array([2., 1.]), array([[-1.],
+                             [-3.]]))
+
+        
     
     """
 
@@ -65,7 +77,7 @@ class ForwardMode:
         
         Returns
         -------
-        evaluated value of the input function
+        value of the input function at the evaluation point
         
         Examples
         --------
@@ -74,6 +86,28 @@ class ForwardMode:
         >>> fm = ForwardMode(1, func, -1)
         >>> fm.get_fx_value()
         1
+        
+        # get univariate vector function value and directional derivative
+        # the function takes a scalar input and outputs an array
+        >>> func = lambda x: (x + 1, x**3)
+        >>> fm = ForwardMode(1, func, -1)
+        >>> fm.get_fx_value()
+        array([2., 1.])
+        
+        # get multivariate scalar function value and directional derivative
+        # the function takes an array input and outputs a scalar
+        >>> func = lambda x, y: 2*x + y
+        >>> fm = ForwardMode(np.array([1, 1]), func, [2, -1])
+        >>> fm.get_fx_value()
+        3
+        
+        # get multivariate array function value and directional derivative
+        # the function takes an array input and outputs an array
+        >>> func = lambda x, y: (2*x + y, 3*y + x**2)
+        >>> fm = ForwardMode(np.array([1, 1]), func, [2, -1])
+        >>> fm.get_fx_value()
+        array([3., 4.]
+        
         """
 
         return self.calculate_dual_number()[0]
@@ -91,12 +125,36 @@ class ForwardMode:
         
         Examples
         --------
-        # get univariate scalar function derivative
-        >>> func = lambda x: x
-        >>> fm = forward_mode(1, func, -1)
+        # get univariate scalar function value and the directional derivative
+        # the function takes a scalar input and outputs a scalar
+        >>> func = lambda x: x + 1
+        >>> fm = ForwardMode(1, func, -1)
         >>> fm.get_derivative()
-        -1
-
+        array([-1.])
+        
+        # get univariate vector function value and directional derivative
+        # the function takes a scalar input and outputs an array
+        >>> func = lambda x: (x + 1, x**3)
+        >>> fm = ForwardMode(1, func, -1)
+        >>> fm.get_derivative()
+        array([[-1.],
+                [-3.]])
+        
+        # get multivariate scalar function value and directional derivative
+        # the function takes an array input and outputs a scalar
+        >>> func = lambda x, y: 2*x + y
+        >>> fm = ForwardMode(np.array([1, 1]), func, [2, -1])
+        >>> fm.get_derivative()
+        array([ 4., -1.])
+        
+        # get multivariate array function value and directional derivative
+        # the function takes an array input and outputs an array
+        >>> func = lambda x, y: (2*x + y, 3*y + x**2)
+        >>> fm = ForwardMode(np.array([1, 1]), func, [2, -1])
+        >>> fm.get_derivative()
+        array([[ 4., -1.],
+                [ 4., -3.]])
+    
         """
 
         return self.calculate_dual_number()[1]
@@ -163,10 +221,6 @@ class ForwardMode:
         """
         
         
-        
-        
-        # handle the case of having only a single input value: convert the scalar value into a list
-        
             
         # check if the input is a scalar
         if np.isscalar(self.inputs):
@@ -207,37 +261,15 @@ class ForwardMode:
         z = self.functions(*dual_list)
         
         try:
+            # input function is a scalar function
             return z.val, z.derv
         except AttributeError:
+            # input function is an array function
             return self.fuse_multiple_inputs(z, input_num)
             
 
 
-
-            
-func = lambda x: x + 1
-fm = ForwardMode(1, func, -1)
-print(fm.calculate_dual_number())
-
-
-
-
-func = lambda x: (x + 1, x**3)
-fm = ForwardMode(1, func, -1)
-print(fm.calculate_dual_number())
-
-
-
-func = lambda x, y: 2*x + y
-fm = ForwardMode(np.array([1, 1]), func, [2, -1])
-print(fm.calculate_dual_number())
-
-
-func = lambda x, y: (2*x + y, 3*y + x**2)
-fm = ForwardMode(np.array([1, 1]), func, [2, -1])
-print(fm.calculate_dual_number())
-        
-
+    
 
 
     

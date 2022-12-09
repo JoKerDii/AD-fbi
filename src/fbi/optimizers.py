@@ -8,7 +8,7 @@
 #################################################################################
 
 import numpy as np
-from .forward_mode import ForwardMode
+from forward_mode import ForwardMode
 import time
 
 class Optimizer:
@@ -79,9 +79,9 @@ class Optimizer:
                 fm = ForwardMode(curr_val, fx)
                 val, x_der = fm.get_fx_value(), fm.get_derivative()
                 # store val and curr_val
-                if t % 100 == 0:
+                if t % 10 == 0:
                     vals.append(val)
-                    currvals.append(curr_val[0])
+                    currvals.append(curr_val)
         # raise the appropriate error for beta value not between 0 to 1
         elif beta>=1 or beta < 0:
             raise ValueError("Beta Values must be within the range of [0,1)")
@@ -92,7 +92,7 @@ class Optimizer:
         end = time.time()
         opt_time = end - start
         
-        return opt_time, val, curr_val
+        return opt_time, vals, currvals
     
     
     
@@ -138,9 +138,6 @@ class Optimizer:
         currvals=[]
         # start the timer
         start = time.time()
-        
-        
-        
         # learning rate value must be great than or equal to 0 and less than 1
         if 0 < alpha < 1:
             curr_val = x
@@ -156,9 +153,9 @@ class Optimizer:
                 fm = ForwardMode(curr_val, fx)
                 val, x_der = fm.get_fx_value(), fm.get_derivative()
                 # store val and curr_val
-                if t % 100 == 0:
+                if t % 10 == 0:
                     vals.append(val)
-                    currvals.append(curr_val[0])
+                    currvals.append(curr_val)
         # raise the appropriate error for alpha value not between 0 to 1
         else:
             raise ValueError("Learning rate alpha must be within the range of (0,1)")
@@ -166,7 +163,7 @@ class Optimizer:
         end = time.time()
         opt_time = end - start
         
-        return opt_time, val, curr_val
+        return opt_time, vals, currvals
     
     
     

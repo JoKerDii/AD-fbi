@@ -107,7 +107,7 @@ class Optimizer:
         x: the starting point to find the minimum
         fx: the function you would like to obtain the minimum for
         num_iter: the number of interations to perform (default 10,000)
-        alpha: learning rate for the gradiant descent (default 0.01)
+        alpha: learning rate for the gradiant descent (default 0.001)
         
 
         Returns

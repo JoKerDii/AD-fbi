@@ -169,5 +169,82 @@ class Optimizer:
         return opt_time, val, curr_val
     
     
-    
+    @staticmethod
+    def ADAGRAD(x, fx, num_iter=10000, alpha=0.01, epsilon=1e-8, verbose=False):
+        """
+        Parameters
+        ----------
+        x: The variable input (can be in either scalar or vector form)
+        fx: The function you would like to obtain the minimum for
+        num_iter: Number of interations to perform
+        alpha: Learning rate for the gradiant descent (default 0.01)
+        epsilon: Denominator value to assure that ZeroDivisionError is not raised (default 1e-8)
+        verbose: Boolean to whether return the full trace of result at each step. Default to False.
+        Returns
+        -------
+        opt_time: The time it takes to run the optimizer in seconds
+        fx_val: The minimum value
+        fx_vals: List of values at each step
+        x_val: Position of the minimum value (can be in either scalar or vector form)
+        x_vals: List of the position at each step (can be in either scalar or vector form)
+        
+        Examples
+        --------
+        >>> x = 1
+        >>> fx = lambda x: (-1 * x.log()) + (x.exp() * x**4) / 10
+        >>> Optimizer.ADAGRAD(x, fx, 1000)
+        (0.14620494842529297, 0.2617299837909705, array([0.94233316]))
+
+        >>> x = np.array([1, -1])
+        >>> fx = lambda x, y:x**3 + y**2
+        >>> Optimizer.ADAGRAD(x, fx, 1000)
+        (0.1048738956451416, 0.35386341347850286, 
+        array([ 0.51915345, -0.46253758]))
+
+        >>> x = 2
+        >>> fx = lambda x: (x - 1)**2 + 5
+        >>> Optimizer.ADAGRAD(x, fx, 1000)
+        (0.0962369441986084, 5.213941015895882, array([1.46253758]))
+
+        >>> fx = lambda x, y: (1 - x)**2 + 100*(y - x**2)**2
+        >>> Optimizer.ADAGRAD(np.array([1,2]), fx, num_iter=10000, alpha=0.2)
+        (1.715116024017334, 0.0004431195291550218, 
+        array([1.02103907, 1.04258986]))
+        """
+        # store results as lists
+        fx_vals, x_vals = [], []
+
+        # start the timer
+        start = time.time()
+
+        # learning rate value must be great than 0
+        if 0 < alpha <=1:
+            x_val = x
+            fm = ForwardMode(x, fx)
+            fx_val, x_der = fm.get_fx_value(), fm.get_derivative()
+            fx_vals.append(fx_val)
+            x_vals.append(x)
+            G = x_der**2
+            # perform ADAGRAD optimization for the number of iterations specified
+            for t in range(1, num_iter + 1):
+                # compute the new variation to update the current x location
+                variation = alpha / np.sqrt(G+epsilon) * x_der
+                x_val = x_val - variation
+                # recalculate the function value and derivative at the updated value
+                fm = ForwardMode(x_val, fx)
+                fx_val, x_der = fm.get_fx_value(), fm.get_derivative()
+                fx_vals.append(fx_val)
+                x_vals.append(x_val)
+                G = G + x_der**2
+        # raise the appropriate error for negative learning rate
+        else:
+            raise ValueError("Alpha value must be greater than 0 and less or equal to 1")
+
+        # end the timer and compute wall clock time
+        end = time.time()
+        opt_time = end - start
+        if verbose:
+            return opt_time, fx_vals, x_vals
+        else:
+            return opt_time, fx_val, x_val
 

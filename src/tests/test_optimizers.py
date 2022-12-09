@@ -41,3 +41,24 @@ class TestOptimizer:
             Optimizer.momentum(xy, f_xy, 1000, alpha = 10)
         except ValueError:
             assert True
+
+    # test univariate function for ADAGRAD optimizer
+    def test_uni_ADAGRAD(self):
+        opt_time, val, curr_val = Optimizer.ADAGRAD(x, f_x, 10000, alpha=0.1)
+        assert val == pytest.approx(0)
+        assert curr_val[0] == pytest.approx(-1)
+        
+    # test multivariate function for ADAGRAD optimizer
+    def test_multi_ADAGRAD(self):
+        opt_time, val, curr_val = Optimizer.ADAGRAD(xy, f_xy, 10000, alpha=0.1)
+        assert val == pytest.approx(0)
+        assert curr_val[0] == pytest.approx(1)
+        assert curr_val[1] == pytest.approx(-1)
+            
+    # test invalid hyperparameters for ADAGRAD
+    def test_ADAGRAD_alpha_invalid(self):
+        try:
+            Optimizer.ADAGRAD(xy, f_xy, 1000, alpha = 10)
+        except ValueError:
+            assert True
+    

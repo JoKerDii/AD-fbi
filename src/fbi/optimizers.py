@@ -26,13 +26,13 @@ class Optimizer:
     (0.04814004898071289, 2.0278841795288425e-05, array([-0.06710591]))
     """
     @staticmethod
-    def momentum(x, fx, num_iter, alpha=0.01, beta=.9, verbose = False):
+    def momentum(x, fx, num_iter = 10000, alpha=0.01, beta=.9, verbose = False):
         """
         Parameters
         ----------
         x: the variable input (can be in either scalar or vector form)
         fx: the function you would like to obtain the minimum for
-        num_iter: the number of interations to perform
+        num_iter: the number of interations to perform (default 10,000)
         alpha: learning rate for the gradiant descent (default 0.01)
         beta: exponential decay (default 0.9)
 
@@ -100,13 +100,13 @@ class Optimizer:
     
     
     @staticmethod
-    def gradient_descent(x, fx, num_iter, alpha=0.01, verbose = False):
+    def gradient_descent(x, fx, num_iter = 10000, alpha=0.001, verbose = False):
         """
         Parameters
         ----------
         x: the starting point to find the minimum
         fx: the function you would like to obtain the minimum for
-        num_iter: the number of interations to perform
+        num_iter: the number of interations to perform (default 10,000)
         alpha: learning rate for the gradiant descent (default 0.01)
         
 
@@ -137,7 +137,9 @@ class Optimizer:
         >>> Optimizer.gradient_descent(x, fx, 1000)
         (0.036324501037597656, 5.0, array([1.]))
         """
+        # initiate the array to store the function values
         vals=[]
+        # initiate the array to store the intermediate values for the input variable(s)
         currvals=[]
         # start the timer
         start = time.time()
@@ -170,7 +172,5 @@ class Optimizer:
             return opt_time, val, curr_val
         else:
             return opt_time, vals, currvals
-    
-    
     
 

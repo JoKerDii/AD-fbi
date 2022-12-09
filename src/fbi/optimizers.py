@@ -26,7 +26,7 @@ class Optimizer:
     (0.04814004898071289, 2.0278841795288425e-05, array([-0.06710591]))
     """
     @staticmethod
-    def momentum(x, fx, num_iter, alpha=0.01, beta=.9):
+    def momentum(x, fx, num_iter, alpha=0.01, beta=.9, verbose = False):
         """
         Parameters
         ----------
@@ -92,12 +92,15 @@ class Optimizer:
         end = time.time()
         opt_time = end - start
         
-        return opt_time, vals, currvals
+        if verbose == False:
+            return opt_time, val, curr_val
+        else:
+            return opt_time, vals, currvals
     
     
     
     @staticmethod
-    def gradient_descent(x, fx, num_iter, alpha=0.01):
+    def gradient_descent(x, fx, num_iter, alpha=0.01, verbose = False):
         """
         Parameters
         ----------
@@ -163,7 +166,10 @@ class Optimizer:
         end = time.time()
         opt_time = end - start
         
-        return opt_time, vals, currvals
+        if verbose == False:
+            return opt_time, val, curr_val
+        else:
+            return opt_time, vals, currvals
     
     
     

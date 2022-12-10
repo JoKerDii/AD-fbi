@@ -25,3 +25,5 @@ jobs:
         run: pytest src/tests/test_dual_number.py
       - name: run forward_mode test suite
         run: pytest src/tests/test_forward_mode.py
+      - name: run Optimizers test suite
+        run: pytest src/tests/test_optimizers.py

@@ -7,7 +7,7 @@
 
 import pytest
 import numpy as np
-from fbi.optimizers import Optimizer
+from AD_fbi.optimizers import Optimizer
 
 x = 1
 f_x = lambda x: (x + 1) ** 2
@@ -32,6 +32,7 @@ class TestOptimizer:
     def test_momentum_beta_invalid(self):
         try:
             Optimizer.momentum(xy, f_xy, 1000, beta = 1.5)
+            assert False
         except ValueError:
             assert True
             
@@ -39,6 +40,7 @@ class TestOptimizer:
     def test_momentum_alpha_invalid(self):
         try:
             Optimizer.momentum(xy, f_xy, 1000, alpha = 10)
+            assert False
         except ValueError:
             assert True
 
@@ -61,6 +63,7 @@ class TestOptimizer:
     def test_gradient_descent_alpha_invalid(self):
         try:
             Optimizer.gradient_descent(xy, f_xy, 1000, alpha = 10)
+            assert False
         except ValueError:
             assert True
 
@@ -82,6 +85,7 @@ class TestOptimizer:
     def test_ADAGRAD_alpha_invalid(self):
         try:
             Optimizer.ADAGRAD(xy, f_xy, 1000, alpha = 10)
+            assert False
         except ValueError:
             assert True
     

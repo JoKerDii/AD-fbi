@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 
-from fbi.forward_mode import ForwardMode
+from AD_fbi.forward_mode import ForwardMode
 
 
 ##initialize ForwardMode objects

@@ -22,7 +22,7 @@ jobs:
         run: python -m pip install -r requirement.txt
       - name: run pytest coverage
         run: |
-          pytest --cov=src/fbi --cov-report=term-missing > temp.txt
+          pytest --cov=src/AD_fbi --cov-report=term-missing > temp.txt
           k=$(grep 'TOTAL' temp.txt | grep -Po '\d+(?=%)')
           threshold=90
           if [ "$k" -ge "$threshold" ];
@@ -37,7 +37,7 @@ jobs:
           fi
       - name: Generate html output
         run: |
-          pytest --cov=src/fbi --cov-report=html > docs/generate.html
+          pytest --cov=src/AD_fbi --cov-report=html > docs/generate.html
           rm -f htmlcov/.gitignore
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4

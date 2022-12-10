@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from fbi.dual_number import DualNumbers, is_numeric
+from AD_fbi.dual_number import DualNumbers, is_numeric
 
 z0 = DualNumbers(1, 2)
 z1 = DualNumbers(1, -1)

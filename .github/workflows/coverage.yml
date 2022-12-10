@@ -40,4 +40,9 @@ jobs:
           pytest --cov=src/fbi --cov-report=html > docs/generate.html
           ls -al htmlcov/
           rm htmlcov/.gitignore
+          ls -al htmlcov/
+      - name: Deploy 🚀
+        uses: docs@v4
+        with:
+          folder: htmlcov
         

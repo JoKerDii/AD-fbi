@@ -25,11 +25,13 @@ class Optimizer:
     >>> print(Optimizer.momentum(x, fx, 1000))
     (0.038931846618652344, 2.0278841795288425e-05, -0.06710591258339543)
     
+    # sample use case of instantiating and using a momentum optimizer
     >>> x = 1
     >>> fx = lambda x: (-1 * x.log()) + (x.exp() * x**4) / 10
     >>> Optimizer.momentum(x, fx, 1000)    
     (0.1545562744140625, 0.26172998379097046, 0.9423331580331616)
 
+    # sample use case of instantiating and using a gradient descent optimizer
     >>> x = 1
     >>> fx = lambda x: (-1 * x.log()) + (x.exp() * x**4) / 10
     >>> Optimizer.gradient_descent(x, fx, 1000)
@@ -45,16 +47,16 @@ class Optimizer:
         fx: the scalar function you would like to obtain the minimum for
         num_iter: the number of interations to perform (default 10,000)
         alpha: learning rate for the gradiant descent (default 0.01)
-        beta: exponential decay (default 0.9)
-        verbose: if verbose = True, output the intermediary positions (vals) and values (currvals) for every 10 iterations, if verbose = False, only output the final results (default False)
+        beta: exponential decay rate (default 0.9)
+        verbose: if verbose = True, output the intermediary positions (vals) and values (currvals) for every iteration, if verbose = False, only output the final results (default False)
 
         Returns
         -------
         opt_time: The time it takes to run the optimizer in seconds
         val: the position of the minimum value
         curr_val: the minimum value (can be in either scalar or vector form)
-        vals: the intermediary positions of input variables for every 10 iterations (only returns when verbose = False)
-        currvals: the intermediary values of the function for every 10 iterations (only returns when verbose = False)
+        vals: the intermediary positions of input variables for every iteration (only returns when verbose = False)
+        currvals: the intermediary values of the function for every iteration (only returns when verbose = False)
 
         Examples
         --------
@@ -133,11 +135,11 @@ class Optimizer:
         """
         Parameters
         ----------
-        x: the starting point to find the minimum
-        fx: the scalar function you would like to obtain the minimum 
+        x: the starting point to find the minimum point
+        fx: the scalar function you would like to obtain the minimum point
         num_iter: the number of interations to perform (default 10,000)
         alpha: learning rate for the gradiant descent (default 0.001)
-        verbose: if verbose = True, output the intermediary positions (vals) and values (currvals) for every 10 iterations, if verbose = False, only output the final results (default False)
+        verbose: if verbose = True, output the intermediary positions (vals) and values (currvals) for every iteration, if verbose = False, only output the final results (default False)
 
 
         Returns
@@ -145,8 +147,8 @@ class Optimizer:
         opt_time: The time it takes to run the optimizer in seconds
         val: the position of the minimum value
         curr_val: the minimum value (can be in either scalar or vector form)
-        vals: the intermediary positions of input variables for every 10 iterations (only returns when verbose = False)
-        currvals: the intermediary values of the function for every 10 iterations (only returns when verbose = False)
+        vals: the intermediary positions of input variables for every iteration (only returns when verbose = False)
+        currvals: the intermediary values of the function for every iteration (only returns when verbose = False)
         
 
         Examples
@@ -235,7 +237,7 @@ class Optimizer:
         fx_val: The minimum value
         fx_vals: List of values at each step
         x_val: Position of the minimum value (can be in either scalar or vector form)
-        x_vals: List of the position at each step (can be in either scalar or vector form)
+        x_vals: List of the position at each step
         
         Examples
         --------
@@ -287,11 +289,12 @@ class Optimizer:
                 G = G + x_der**2
         # raise the appropriate error for negative learning rate
         else:
-            raise ValueError("Alpha value must be greater than 0 and less or equal to 1")
+            raise ValueError("Learning rate alpha must be within the range of (0,1]")
 
         # end the timer and compute wall clock time
         end = time.time()
         opt_time = end - start
+
         if verbose:
             return opt_time, fx_vals, x_vals
         else:

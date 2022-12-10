@@ -22,6 +22,7 @@ class TestDualNumbers:
         assert "Values: 1, Derivatives: -1" == z1.__repr__()
         assert "Values: 3, Derivatives: 100000" == z4.__repr__()
         assert "Values: 1, Derivatives: [ 0 -1]" == x3.__repr__()
+
     # test is_numeric function
     def test_is_numeric(self):
         x1, x2, x3, x4 = 6, 'a', 'dual', ['n', 'u', 'm', 'b', 'e', 'r']
@@ -45,6 +46,7 @@ class TestDualNumbers:
         assert x1.val == 1
         assert x1.derv[0] == 0
         assert x1.derv[1] == 2
+
     def test_init_Error(self):
         try:
             z_err = DualNumbers('k', 2)
@@ -56,6 +58,7 @@ class TestDualNumbers:
             assert False
         except TypeError:
             assert True
+            
     # test attribute setter
     def test_setter(self):
         z0.val = 2

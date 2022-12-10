@@ -8,7 +8,7 @@
 #################################################################################
 
 import numpy as np
-from forward_mode import ForwardMode
+from .forward_mode import ForwardMode
 import time
 
 class Optimizer:
@@ -48,13 +48,15 @@ class Optimizer:
         opt_time: The time it takes to run the optimizer in seconds
         val: the position of the minimum value
         curr_val: the minimum value (can be in either scalar or vector form)
+        vals: the intermediary positions of input variables for every 10 iterations (only returns when verbose = False)
+        currvals: the intermediary values of the function for every 10 iterations (only returns when verbose = False)
 
         Examples
         --------
         >>> x = 1
         >>> fx = lambda x: (-1 * x.log()) + (x.exp() * x**4) / 10
         >>> Optimizer.momentum(x, fx, 1000)
-        (0.1293182373046875, 0.26172998379097046, array([0.94233316]))
+        (0.030438899993896484, 2.0278841795288425e-05, -0.06710591258339543)
 
         >>> x = np.array([1, -1])
         >>> fx = lambda x, y:x**3 + y**2
@@ -63,8 +65,20 @@ class Optimizer:
 
         >>> x = 2
         >>> fx = lambda x: (x - 1)**2 + 5
-        >>> Optimizer.momentum(x, fx, 1000)
-        (0.06605792045593262, 5.0, array([1.]))
+        >>> Optimizer.momentum(x, fx, 50, verbose = True)
+        (0.009505748748779297,
+        [5.843960615554842,
+        5.597026644618029,
+        5.387908529728599,
+        5.240901124503859,
+        5.1458759748109655],
+        [1.9186732909771798,
+        1.7726749928773602,
+        1.6228230324326476,
+        1.4908167932170397,
+        1.3819371346320828])
+       
+
         """
         vals=[]
         currvals=[]
@@ -75,8 +89,7 @@ class Optimizer:
             mt, curr_val = 0, x
             fm = ForwardMode(x, fx)
             val, x_der = fm.get_fx_value(), fm.get_derivative()
-            print("x_der", x_der)
-            print("x_der", type(x_der))
+            
             # perform momentum optimization for the number of iterations specified
             for t in range(1, num_iter + 1):
                 # calculate momentum
@@ -85,7 +98,7 @@ class Optimizer:
                 # compute the new variation to update the current x location
                 variation = alpha * mt
                 curr_val = curr_val - variation
-                print("curr_val", curr_val)
+                
                 # recalculate the function value and derivative at the updated value
                 fm = ForwardMode(curr_val, fx)
                 val, x_der = fm.get_fx_value(), fm.get_derivative()
@@ -136,7 +149,8 @@ class Optimizer:
         >>> x = 1
         >>> fx = lambda x: (-1 * x.log()) + (x.exp() * x**4) / 10
         >>> Optimizer.gradient_descent(x, fx, 1000)
-        (0.06380343437194824, 0.2617300604953795, array([0.94249606]))
+        (0.13236427307128906, 0.2617300604953795, 0.9424960556340723)
+       
         
 
         >>> x = np.array([1, -1])
@@ -198,13 +212,6 @@ class Optimizer:
         else:
             return opt_time, vals, currvals
         
-        
-x = 1
-fx = lambda x: x**4
-fm_2 = ForwardMode(x, fx)
-print(fm_2.get_derivative())
-print(Optimizer.momentum(x, fx, 10))
-
 
         
         

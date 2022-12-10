@@ -8,7 +8,7 @@
 
 
 import numpy as np
-from dual_number import DualNumbers
+from .dual_number import DualNumbers
 
 
 class ForwardMode:
@@ -272,10 +272,7 @@ class ForwardMode:
             
 
 
-x = 1
-fx = lambda x: x**4
-fm_2 = ForwardMode(x, fx)
-print(fm_2.get_derivative())
+
 
 
     

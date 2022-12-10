@@ -29,6 +29,11 @@ class Optimizer:
     >>> fx = lambda x: (-1 * x.log()) + (x.exp() * x**4) / 10
     >>> Optimizer.momentum(x, fx, 1000)    
     (0.1545562744140625, 0.26172998379097046, 0.9423331580331616)
+
+    >>> x = 1
+    >>> fx = lambda x: (-1 * x.log()) + (x.exp() * x**4) / 10
+    >>> Optimizer.gradient_descent(x, fx, 1000)
+    (0.13236427307128906, 0.2617300604953795, 0.9424960556340723)
     
     """
     @staticmethod
@@ -84,7 +89,7 @@ class Optimizer:
         currvals=[]
         # start the timer
         start = time.time()
-        # decay value must be great than or equal to 0 and less than 1
+        # decay rate must be great than or equal to 0 and less than 1
         if 0 <= beta < 1 and 0 < alpha < 1:
             mt, curr_val = 0, x
             fm = ForwardMode(x, fx)
@@ -151,14 +156,10 @@ class Optimizer:
         >>> Optimizer.gradient_descent(x, fx, 1000)
         (0.13236427307128906, 0.2617300604953795, 0.9424960556340723)
        
-        
-
         >>> x = np.array([1, -1])
         >>> fx = lambda x, y:x**3 + y**2
         >>> Optimizer.gradient_descent(x, fx, 1000)
         (0.042717695236206055, 0.03381871354483734, array([ 0.24973993, -0.13506452]))
-        
-        
         
         >>> x = 2
         >>> fx = lambda x: (x - 1)**2 + 5
@@ -242,7 +243,6 @@ class Optimizer:
         >>> fx = lambda x: (-1 * x.log()) + (x.exp() * x**4) / 10
         >>> Optimizer.ADAGRAD(x, fx, 1000)
         (0.13465595245361328, 0.2617299837909705, 0.9423331580331631)
-        
 
         >>> x = np.array([1, -1])
         >>> fx = lambda x, y:x**3 + y**2

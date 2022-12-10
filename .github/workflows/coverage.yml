@@ -38,9 +38,9 @@ jobs:
       - name: Generate html output
         run: |
           pytest --cov=src/fbi --cov-report=html > docs/generate.html
-          rm htmlcov/.gitignore
+          rm -f htmlcov/.gitignore
       - name: Deploy 🚀
-        uses: actions/checkout@v3
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: htmlcov
         

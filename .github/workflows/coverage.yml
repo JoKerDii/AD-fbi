@@ -38,6 +38,6 @@ jobs:
       - name: Generate html output
         run: |
           pytest --cov=src/fbi --cov-report=html > docs/generate.html
-          rm .gitignore
-          rm htmlcov
+          ls -al htmlcov/
+          rm htmlcov/.gitignore
         

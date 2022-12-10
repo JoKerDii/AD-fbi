@@ -8,7 +8,7 @@
 #################################################################################
 
 import numpy as np
-from forward_mode import ForwardMode
+from .forward_mode import ForwardMode
 import time
 
 class Optimizer:
@@ -31,10 +31,11 @@ class Optimizer:
         Parameters
         ----------
         x: the variable input (can be in either scalar or vector form)
-        fx: the function you would like to obtain the minimum for
+        fx: the scalar function you would like to obtain the minimum for
         num_iter: the number of interations to perform (default 10,000)
         alpha: learning rate for the gradiant descent (default 0.01)
         beta: exponential decay (default 0.9)
+        verbose: if verbose = True, output the intermediary positions (vals) and values (currvals) for every 10 iterations, if verbose = False, only output the final results (default False)
 
         Returns
         -------
@@ -105,37 +106,51 @@ class Optimizer:
         Parameters
         ----------
         x: the starting point to find the minimum
-        fx: the function you would like to obtain the minimum for
+        fx: the scalar function you would like to obtain the minimum 
         num_iter: the number of interations to perform (default 10,000)
         alpha: learning rate for the gradiant descent (default 0.001)
-        
+        verbose: if verbose = True, output the intermediary positions (vals) and values (currvals) for every 10 iterations, if verbose = False, only output the final results (default False)
+
 
         Returns
         -------
         opt_time: The time it takes to run the optimizer in seconds
         val: the position of the minimum value
         curr_val: the minimum value (can be in either scalar or vector form)
+        vals: the intermediary positions of input variables for every 10 iterations (only returns when verbose = False)
+        currvals: the intermediary values of the function for every 10 iterations (only returns when verbose = False)
+        
 
         Examples
         --------
         >>> x = 1
         >>> fx = lambda x: (-1 * x.log()) + (x.exp() * x**4) / 10
         >>> Optimizer.gradient_descent(x, fx, 1000)
-        (0.07654619216918945, 0.2617299837909705, array([0.94233316]))
+        (0.06380343437194824, 0.2617300604953795, array([0.94249606]))
         
 
         >>> x = np.array([1, -1])
         >>> fx = lambda x, y:x**3 + y**2
         >>> Optimizer.gradient_descent(x, fx, 1000)
-        (0.05128312110900879,
-        3.323299732460115e-05,
-        array([ 3.21506559e-02, -1.68296736e-09]))
+        (0.042717695236206055, 0.03381871354483734, array([ 0.24973993, -0.13506452]))
         
-
+        
+        
         >>> x = 2
         >>> fx = lambda x: (x - 1)**2 + 5
-        >>> Optimizer.gradient_descent(x, fx, 1000)
-        (0.036324501037597656, 5.0, array([1.]))
+        >>> Optimizer.gradient_descent(x, fx, 50, verbose = True)
+       (0.0025625228881835938,
+        [5.960750957026343,
+        5.9230424014270335,
+        5.886813870546916,
+        5.852007274832185,
+        5.8185668046884285],
+        [array([1.98017904]),
+        array([1.96075096]),
+        array([1.94170795]),
+        array([1.9230424]),
+        array([1.90474682])])
+        
         """
         # initiate the array to store the function values
         vals=[]
@@ -172,5 +187,10 @@ class Optimizer:
             return opt_time, val, curr_val
         else:
             return opt_time, vals, currvals
+        
+        
+
+
+
     
 

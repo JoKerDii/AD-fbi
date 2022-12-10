@@ -19,7 +19,7 @@ class TestOptimizer:
     def test_uni_momentum(self):
         opt_time, val, curr_val = Optimizer.momentum(x, f_x, 1000)
         assert val == pytest.approx(0)
-        assert curr_val[0] == pytest.approx(-1)
+        assert curr_val == pytest.approx(-1)
         
     # test multivariate function for momentum optimizer
     def test_multi_momentum(self):
@@ -46,7 +46,7 @@ class TestOptimizer:
     def test_uni_gradient_descent(self):
         opt_time, val, curr_val = Optimizer.momentum(x, f_x, 10000)
         assert val == pytest.approx(0)
-        assert curr_val[0] == pytest.approx(-1)
+        assert curr_val == pytest.approx(-1)
         
     # test multivariate function for momentum optimizer
     def test_multi_gradient_descent(self):

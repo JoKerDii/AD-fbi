@@ -42,7 +42,6 @@ jobs:
           rm htmlcov/.gitignore
           ls -al htmlcov/
       - name: Deploy 🚀
-        uses: docs/
         with:
-          folder: htmlcov
+          folder: docs/htmlcov
         

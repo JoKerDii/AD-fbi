@@ -8,7 +8,7 @@
 
 
 import numpy as np
-from .dual_number import DualNumbers
+from dual_number import DualNumbers
 
 
 class ForwardMode:
@@ -262,7 +262,7 @@ class ForwardMode:
         
         try:
             # input function is a scalar function
-            if len(z.derv) ==1: # the input is a scalar
+            if len(z.derv) == 1: # the input is a scalar
                 return float(z.val), float(z.derv)
             else:
                 return z.val, z.derv
@@ -272,8 +272,10 @@ class ForwardMode:
             
 
 
-
-    
+x = 1
+fx = lambda x: x**4
+fm_2 = ForwardMode(x, fx)
+print(fm_2.get_derivative())
 
 
     

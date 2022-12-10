@@ -38,12 +38,10 @@ jobs:
       - name: Generate html output
         run: |
           pytest --cov=src/fbi --cov-report=html > docs/generate.html
-          ls -al htmlcov/
           rm htmlcov/.gitignore
-          ls -al htmlcov/
       - name: Deploy 🚀
         run: ls
-        # uses: docs/github-pages-deploy-action@v4
-        # with:
-        #   folder: docs/htmlcov
+        uses: ./github-pages-deploy-action@v4
+        with:
+          folder: docs/htmlcov
         

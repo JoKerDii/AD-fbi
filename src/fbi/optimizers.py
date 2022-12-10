@@ -89,7 +89,8 @@ class Optimizer:
             mt, curr_val = 0, x
             fm = ForwardMode(x, fx)
             val, x_der = fm.get_fx_value(), fm.get_derivative()
-            
+            vals.append(val)
+            currvals.append(curr_val)
             # perform momentum optimization for the number of iterations specified
             for t in range(1, num_iter + 1):
                 # calculate momentum
@@ -186,6 +187,8 @@ class Optimizer:
             curr_val = x
             fm = ForwardMode(x, fx)
             val, x_der = fm.get_fx_value(), fm.get_derivative()
+            vals.append(val)
+            currvals.append(curr_val)
             # perform gradient descent for the number of iterations specified
             for t in range(1, num_iter + 1):
                 # compute the new variation to update the current x location
@@ -196,9 +199,8 @@ class Optimizer:
                 fm = ForwardMode(curr_val, fx)
                 val, x_der = fm.get_fx_value(), fm.get_derivative()
                 # store val and curr_val
-                if t % 10 == 0:
-                    vals.append(val)
-                    currvals.append(curr_val)
+                vals.append(val)
+                currvals.append(curr_val)
         # raise the appropriate error for alpha value not between 0 to 1
         else:
             raise ValueError("Learning rate alpha must be within the range of (0,1)")

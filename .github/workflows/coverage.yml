@@ -42,7 +42,7 @@ jobs:
           rm htmlcov/.gitignore
           ls -al htmlcov/
       - name: Deploy 🚀
-        uses: docs@v4
+        uses: docs/
         with:
           folder: htmlcov
         

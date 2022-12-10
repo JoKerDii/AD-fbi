@@ -42,6 +42,8 @@ jobs:
           rm htmlcov/.gitignore
           ls -al htmlcov/
       - name: Deploy 🚀
+        run: ls
+        uses: docs/github-pages-deploy-action@v4
         with:
           folder: docs/htmlcov
         

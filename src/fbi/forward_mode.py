@@ -8,7 +8,7 @@
 
 
 import numpy as np
-from .dual_number import DualNumbers
+from dual_number import DualNumbers
 
 
 class ForwardMode:

@@ -8,7 +8,7 @@
 #################################################################################
 
 import numpy as np
-from .forward_mode import ForwardMode
+from forward_mode import ForwardMode
 import time
 
 class Optimizer:
@@ -26,13 +26,13 @@ class Optimizer:
     (0.04814004898071289, 2.0278841795288425e-05, array([-0.06710591]))
     """
     @staticmethod
-    def momentum(x, fx, num_iter, alpha=0.01, beta=.9):
+    def momentum(x, fx, num_iter = 10000, alpha=0.01, beta=.9, verbose = False):
         """
         Parameters
         ----------
         x: the variable input (can be in either scalar or vector form)
         fx: the function you would like to obtain the minimum for
-        num_iter: the number of interations to perform
+        num_iter: the number of interations to perform (default 10,000)
         alpha: learning rate for the gradiant descent (default 0.01)
         beta: exponential decay (default 0.9)
 
@@ -79,9 +79,9 @@ class Optimizer:
                 fm = ForwardMode(curr_val, fx)
                 val, x_der = fm.get_fx_value(), fm.get_derivative()
                 # store val and curr_val
-                if t % 100 == 0:
+                if t % 10 == 0:
                     vals.append(val)
-                    currvals.append(curr_val[0])
+                    currvals.append(curr_val)
         # raise the appropriate error for beta value not between 0 to 1
         elif beta>=1 or beta < 0:
             raise ValueError("Beta Values must be within the range of [0,1)")
@@ -92,19 +92,22 @@ class Optimizer:
         end = time.time()
         opt_time = end - start
         
-        return opt_time, val, curr_val
+        if verbose == False:
+            return opt_time, val, curr_val
+        else:
+            return opt_time, vals, currvals
     
     
     
     @staticmethod
-    def gradient_descent(x, fx, num_iter, alpha=0.01):
+    def gradient_descent(x, fx, num_iter = 10000, alpha=0.001, verbose = False):
         """
         Parameters
         ----------
         x: the starting point to find the minimum
         fx: the function you would like to obtain the minimum for
-        num_iter: the number of interations to perform
-        alpha: learning rate for the gradiant descent (default 0.01)
+        num_iter: the number of interations to perform (default 10,000)
+        alpha: learning rate for the gradiant descent (default 0.001)
         
 
         Returns
@@ -134,13 +137,12 @@ class Optimizer:
         >>> Optimizer.gradient_descent(x, fx, 1000)
         (0.036324501037597656, 5.0, array([1.]))
         """
+        # initiate the array to store the function values
         vals=[]
+        # initiate the array to store the intermediate values for the input variable(s)
         currvals=[]
         # start the timer
         start = time.time()
-        
-        
-        
         # learning rate value must be great than or equal to 0 and less than 1
         if 0 < alpha < 1:
             curr_val = x
@@ -156,9 +158,9 @@ class Optimizer:
                 fm = ForwardMode(curr_val, fx)
                 val, x_der = fm.get_fx_value(), fm.get_derivative()
                 # store val and curr_val
-                if t % 100 == 0:
+                if t % 10 == 0:
                     vals.append(val)
-                    currvals.append(curr_val[0])
+                    currvals.append(curr_val)
         # raise the appropriate error for alpha value not between 0 to 1
         else:
             raise ValueError("Learning rate alpha must be within the range of (0,1)")

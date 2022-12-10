@@ -29,7 +29,7 @@ class ForwardMode:
     >>> func = lambda x: x**2 + 1
     >>> fm = ForwardMode(1, func, -1)
     >>> fm.get_fx_value()
-    2
+    2.0
     
     # get function derivative
     >>> fm.get_derivative()
@@ -85,7 +85,7 @@ class ForwardMode:
         >>> func = lambda x: x
         >>> fm = ForwardMode(1, func, -1)
         >>> fm.get_fx_value()
-        1
+        1.0
         
         # get univariate vector function value and directional derivative
         # the function takes a scalar input and outputs an array
@@ -130,7 +130,7 @@ class ForwardMode:
         >>> func = lambda x: x + 1
         >>> fm = ForwardMode(1, func, -1)
         >>> fm.get_derivative()
-        array([-1.])
+        -1.0
         
         # get univariate vector function value and directional derivative
         # the function takes a scalar input and outputs an array
@@ -193,7 +193,7 @@ class ForwardMode:
         >>> func = lambda x: x + 1
         >>> fm = ForwardMode(1, func, -1)
         >>> fm.calculate_dual_number()
-        (2, array([-1.]))
+        (2.0, -1.0)
         
         # get univariate vector function value and directional derivative
         # the function takes a scalar input and outputs an array
@@ -262,14 +262,17 @@ class ForwardMode:
         
         try:
             # input function is a scalar function
-            return z.val, z.derv
+            if len(z.derv) == 1: # the input is a scalar
+                return float(z.val), float(z.derv)
+            else:
+                return z.val, z.derv
         except AttributeError:
             # input function is an array function
             return self.fuse_multiple_inputs(z, input_num)
             
 
 
-    
+
 
 
     

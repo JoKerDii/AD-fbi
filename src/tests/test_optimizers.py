@@ -19,7 +19,7 @@ class TestOptimizer:
     def test_uni_momentum(self):
         opt_time, val, curr_val = Optimizer.momentum(x, f_x, 1000)
         assert val == pytest.approx(0)
-        assert curr_val[0] == pytest.approx(-1)
+        assert curr_val == pytest.approx(-1)
         
     # test multivariate function for momentum optimizer
     def test_multi_momentum(self):
@@ -42,11 +42,34 @@ class TestOptimizer:
         except ValueError:
             assert True
 
+            
+    # test univariate function for gradient descent optimizer
+    def test_uni_gradient_descent(self):
+        opt_time, val, curr_val = Optimizer.momentum(x, f_x, 10000)
+        assert val == pytest.approx(0)
+        assert curr_val == pytest.approx(-1)
+        
+    # test multivariate function for momentum optimizer
+    def test_multi_gradient_descent(self):
+        opt_time, val, curr_val = Optimizer.gradient_descent(xy, f_xy, 10000)
+        assert val == pytest.approx(0)
+        assert curr_val[0] == pytest.approx(1)
+        assert curr_val[1] == pytest.approx(-1)
+        
+            
+    # test invalid hyper parameters for momentum
+    def test_gradient_descent_alpha_invalid(self):
+        try:
+            Optimizer.gradient_descent(xy, f_xy, 1000, alpha = 10)
+        except ValueError:
+            assert True
+
+
     # test univariate function for ADAGRAD optimizer
     def test_uni_ADAGRAD(self):
         opt_time, val, curr_val = Optimizer.ADAGRAD(x, f_x, 10000, alpha=0.1)
         assert val == pytest.approx(0)
-        assert curr_val[0] == pytest.approx(-1)
+        assert curr_val == pytest.approx(-1)
         
     # test multivariate function for ADAGRAD optimizer
     def test_multi_ADAGRAD(self):
@@ -62,3 +85,4 @@ class TestOptimizer:
         except ValueError:
             assert True
     
+

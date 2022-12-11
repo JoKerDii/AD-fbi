@@ -3,13 +3,13 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 [project]
 name = "AD_fbi"
-version = "0.0.3"
+version = "0.0.4"
 authors = [
   { name="Di Zhen", email="dizhen@hsph.harvard.edu" },
-  { name="Queenie Luo", email="dizhen@hsph.harvard.edu" },
-  { name="Wenxu Liu", email="dizhen@hsph.harvard.edu" },
-  { name="Mengyao Zheng", email="dizhen@hsph.harvard.edu" },
-  { name="Guangya Wan", email="dizhen@hsph.harvard.edu" },
+  { name="Queenie Luo", email="queenieluo@g.harvard.edu" },
+  { name="Wenxu Liu", email="wenxuliu@hsph.harvard.edu" },
+  { name="Mengyao Zheng", email="mengyaozheng@hsph.harvard.edu" },
+  { name="Guangya Wan", email="gwan@hsph.harvard.edu" },
 ]
 description = "A package computes gradients and performs optimization using the technique of automatic differentiation."
 readme = "README.md"

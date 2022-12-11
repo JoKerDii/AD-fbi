@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 [project]
 name = "AD_fbi"
-version = "0.0.2"
+version = "0.0.3"
 authors = [
   { name="Di Zhen", email="dizhen@hsph.harvard.edu" },
   { name="Queenie Luo", email="dizhen@hsph.harvard.edu" },
